@@ -104,6 +104,23 @@ struct MapView: UIViewRepresentable {
         }
         return view
       }
+        
+        
+        func mapView(
+          _ mapView: MKMapView,
+          annotationView view: MKAnnotationView,
+          calloutAccessoryControlTapped control: UIControl
+        ) {
+          guard let artwork = view.annotation as? Artwork else {
+            return
+          }
+
+          let launchOptions = [
+            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
+          ]
+          artwork.mapItem?.openInMaps(launchOptions: launchOptions)
+        }
+        
     }
     
     
