@@ -10,15 +10,26 @@ import Foundation
 import MapKit
 import SwiftUI
 
+//STRUCT
 struct MapView: UIViewRepresentable {
     
      let map = MKMapView()
     
+    //FUNCTION
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    
+ 
+ 
+    //shows oahu on map.
+    //FUNCTION
     func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
+        
+        //in this case map is actually MKMapView()
+        //the context is as above
+        //the coordinator is the views associated coordinator
+        map.delegate = context.coordinator
         
         let mapView = MKMapView()
         
@@ -42,13 +53,7 @@ struct MapView: UIViewRepresentable {
         let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
         mapView.setCameraZoomRange(zoomRange, animated: true)
         
-        //return mapView
         
-       // Coordinator2. = self
-        //map.delegate = context.coordinator
-        //map.delegate = context.self
-        //map.delegate = context.coordinator
-        map.delegate = context.coordinator
         
         // Show artwork on map
         let artwork = Artwork(
@@ -65,10 +70,12 @@ struct MapView: UIViewRepresentable {
     
     }
 
+    //not in use currently
+    //FUNCTION
     func updateUIView(_ view: MKMapView, context: UIViewRepresentableContext<MapView>) {
     }
 
-    
+    //CLASS
     class Coordinator: NSObject, MKMapViewDelegate{
       // 1
         var parent: MapView
@@ -76,11 +83,10 @@ struct MapView: UIViewRepresentable {
             self.parent = parent
         }
         
-        
-      func mapView(
-        _ mapView: MKMapView,
-        viewFor annotation: MKAnnotation
-      ) -> MKAnnotationView? {
+      // delegate method
+        // return an instance of MKAnnotationView
+        //FUNCTION
+      func mapView( _ mapView: MKMapView, viewFor annotation: MKAnnotation ) -> MKAnnotationView? {
         // 2
         guard let annotation = annotation as? Artwork else {
           return nil
@@ -105,19 +111,16 @@ struct MapView: UIViewRepresentable {
         return view
       }
         
-        
-        func mapView(
-          _ mapView: MKMapView,
-          annotationView view: MKAnnotationView,
-          calloutAccessoryControlTapped control: UIControl
-        ) {
-          guard let artwork = view.annotation as? Artwork else {
+        //handles call out
+        //tell mapkit what to do when the user taps the callout button.
+        //FUNCTION
+        func mapView( _ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+          
+            guard let artwork = view.annotation as? Artwork else {
             return
           }
 
-          let launchOptions = [
-            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
-          ]
+          let launchOptions = [ MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
           artwork.mapItem?.openInMaps(launchOptions: launchOptions)
         }
         
